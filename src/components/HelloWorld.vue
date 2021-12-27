@@ -14,10 +14,11 @@ export default defineComponent({
     msg: String,
   },
   setup() {
-    const { user, fetchProfile } = useTest();
+    const { user, fetchProfile, state } = useTest();
 
     onMounted(async () => {
       await fetchProfile();
+      console.log("state", state.profile?.username);
     });
 
     return {

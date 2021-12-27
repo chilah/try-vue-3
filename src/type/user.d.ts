@@ -6,5 +6,5 @@ export interface IProfile {
 }
 
 export interface IProfileResponse {
-  profile: IProfile;
+  profile?: IProfile;
 }
