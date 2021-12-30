@@ -1,7 +1,7 @@
 <template>
   <div v-if="!user">Loading</div>
 
-  <div>{{ user?.profile.username }}</div>
+  <div v-else>{{ user.profile?.username }}</div>
 </template>
 
 <script lang="ts">
@@ -18,6 +18,7 @@ export default defineComponent({
 
     onMounted(async () => {
       await fetchProfile();
+
       console.log("state", state.profile?.username);
     });
 

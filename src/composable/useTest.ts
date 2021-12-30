@@ -1,6 +1,6 @@
 import { getProfile } from "@/services";
 import { IProfileResponse } from "@/type";
-import { ref, reactive, toRef } from "vue";
+import { ref, reactive, toRef, toRefs } from "vue";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useTest = () => {
@@ -14,7 +14,9 @@ const useTest = () => {
     state.profile = data.profile;
   }
 
-  return { user, fetchProfile, state };
+  const { profile } = toRefs(state);
+
+  return { user, fetchProfile, state, profile };
 };
 
 export default useTest;

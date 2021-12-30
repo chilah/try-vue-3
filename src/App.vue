@@ -1,10 +1,25 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
+  <AppHeader />
   <router-view />
 </template>
+
+<script lang="ts">
+import AppHeader from "@/components/AppHeader.vue";
+import { defineComponent, reactive, ref, useAttrs } from "vue";
+
+export default defineComponent({
+  components: {
+    AppHeader,
+  },
+  setup() {
+    const data = ref(0);
+
+    return {
+      data,
+    };
+  },
+});
+</script>
 
 <style>
 #app {
