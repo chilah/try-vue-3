@@ -4,11 +4,12 @@ export interface RegisterForm {
   password: string;
 }
 
-export interface RegisterFormRequest {
-  user: RegisterForm;
+export interface SignInForm {
+  username: string;
+  password: string;
 }
 
-export interface BaseLogin {
+export interface UserData {
   email: RegisterForm["email"];
   username: RegisterForm["username"];
   bio: string;
@@ -16,6 +17,10 @@ export interface BaseLogin {
   image: string;
 }
 
-export interface UserResponse {
-  user: BaseLogin;
+export interface AuthResponse<T> {
+  user: T;
+}
+
+export interface AuthRequest<T> {
+  user: T;
 }

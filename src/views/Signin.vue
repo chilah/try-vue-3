@@ -8,7 +8,7 @@
             <a href="">Need an account?</a>
           </p>
 
-          <form>
+          <form @submit.prevent="">
             <fieldset class="form-group">
               <input
                 class="form-control form-control-lg"
@@ -32,3 +32,17 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { submitLogin } from "@/services";
+import { reactive } from "vue";
+
+const signinForm = reactive({
+  email: "",
+  password: "",
+});
+
+const signIn = async () => {
+  const response = await submitLogin({ user: signinForm });
+};
+</script>
