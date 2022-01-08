@@ -1,20 +1,17 @@
+import { RegisterForm, RegisterFormRequest, UserResponse } from "@/type";
+import { AxiosResponse } from "axios";
 import baseInstance from "./request";
 
 const AUTH_API_PATH = "/users";
 
-export interface RegisterForm {
-  username: string;
-  email: string;
-  password: string;
-}
-
-export interface RequestRegisterForm {
-  user: RegisterForm;
-}
-
-export const submitRegister = async (form: RequestRegisterForm) => {
+export const submitRegister = async (
+  form: RegisterFormRequest
+): Promise<AxiosResponse<UserResponse>> => {
   try {
-    const response = await baseInstance.post(`${AUTH_API_PATH}`, form);
+    const response = await baseInstance.post<UserResponse>(
+      `${AUTH_API_PATH}`,
+      form
+    );
 
     return response;
   } catch (error) {
@@ -22,7 +19,7 @@ export const submitRegister = async (form: RequestRegisterForm) => {
   }
 };
 
-export const submitLogin = async () => {
+export const submitLogin = async (): Promise<AxiosResponse<UserResponse>> => {
   try {
     const response = await baseInstance.post(`${AUTH_API_PATH}/login`);
 

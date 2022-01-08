@@ -1,10 +1,21 @@
-export interface IProfile {
+export interface RegisterForm {
   username: string;
-  bio: string;
-  image: string;
-  following: true;
+  email: string;
+  password: string;
 }
 
-export interface IProfileResponse {
-  profile?: IProfile;
+export interface RegisterFormRequest {
+  user: RegisterForm;
+}
+
+export interface BaseLogin {
+  email: RegisterForm["email"];
+  username: RegisterForm["username"];
+  bio: string;
+  token: string;
+  image: string;
+}
+
+export interface UserResponse {
+  user: BaseLogin;
 }

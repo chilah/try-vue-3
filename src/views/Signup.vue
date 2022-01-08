@@ -12,7 +12,7 @@
             <li>That email is already taken</li>
           </ul>
 
-          <form>
+          <form id="register-form" @submit.prevent="register">
             <fieldset class="form-group">
               <input
                 v-model="registerForm.username"
@@ -48,11 +48,19 @@
 </template>
 
 <script setup lang="ts">
+import { submitRegister } from "@/services";
+import { RegisterForm } from "@/type";
 import { reactive } from "vue";
 
-const registerForm = reactive({
+const registerForm = reactive<RegisterForm>({
   username: "",
   email: "",
   password: "",
 });
+
+const register = async () => {
+  const response = await submitRegister({ user: registerForm });
+
+  console.log(response);
+};
 </script>
