@@ -1,6 +1,6 @@
 import {
   AuthRequest,
-  RegisterForm,
+  SignUpForm,
   SignInForm,
   AuthResponse,
   UserData,
@@ -10,8 +10,8 @@ import baseInstance from "./request";
 
 const AUTH_API_PATH = "/users";
 
-export const submitRegister = async (
-  form: AuthRequest<RegisterForm>
+export const postSignUp = async (
+  form: AuthRequest<SignUpForm>
 ): Promise<AxiosResponse<AuthResponse<UserData>>> => {
   try {
     const response = await baseInstance.post<AuthResponse<UserData>>(
@@ -25,7 +25,7 @@ export const submitRegister = async (
   }
 };
 
-export const submitLogin = async (
+export const postSignIn = async (
   form: AuthRequest<SignInForm>
 ): Promise<AxiosResponse<AuthResponse<UserData>>> => {
   try {
