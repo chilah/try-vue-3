@@ -8,9 +8,10 @@
             <a href="">Need an account?</a>
           </p>
 
-          <form @submit.prevent="">
+          <form @submit.prevent="signIn">
             <fieldset class="form-group">
               <input
+                v-model="form.email"
                 class="form-control form-control-lg"
                 type="text"
                 placeholder="Email"
@@ -18,6 +19,7 @@
             </fieldset>
             <fieldset class="form-group">
               <input
+                v-model="form.password"
                 class="form-control form-control-lg"
                 type="password"
                 placeholder="Password"
@@ -34,15 +36,28 @@
 </template>
 
 <script setup lang="ts">
-import { submitLogin } from "@/services";
-import { reactive } from "vue";
+import { UserStorage } from "@/helper";
+import { postSignIn } from "@/services";
+import { AuthResponse, SignInForm, UserData } from "@/type";
+import { onMounted, reactive } from "vue";
 
-const signinForm = reactive({
+const form = reactive<SignInForm>({
   email: "",
   password: "",
 });
 
 const signIn = async () => {
-  const response = await submitLogin({ user: signinForm });
+  const { data } = await postSignIn({ user: form });
+
+  const stringify = JSON.stringify(data);
+  localStorage.setItem("condotiUser", stringify);
 };
+
+onMounted(() => {
+  const storage = new UserStorage();
+
+  const userData = storage.getStorage<AuthResponse<UserData>>("condotiUser");
+
+  console.log(userData?.user.email);
+});
 </script>

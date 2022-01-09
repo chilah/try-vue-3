@@ -48,18 +48,18 @@
 </template>
 
 <script setup lang="ts">
-import { submitRegister } from "@/services";
-import { RegisterForm } from "@/type";
+import { postSignUp } from "@/services";
+import { SignUpForm } from "@/type";
 import { reactive } from "vue";
 
-const registerForm = reactive<RegisterForm>({
+const registerForm = reactive<SignUpForm>({
   username: "",
   email: "",
   password: "",
 });
 
 const register = async () => {
-  const response = await submitRegister({ user: registerForm });
+  const response = await postSignUp({ user: registerForm });
 
   console.log(response);
 };
