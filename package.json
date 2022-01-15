@@ -10,6 +10,7 @@
     "serve:staging": "vue-cli-service serve --mode staging"
   },
   "dependencies": {
+    "@vueuse/core": "^7.5.3",
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
     "pinia": "^2.0.9",

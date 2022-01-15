@@ -21,11 +21,11 @@
           </a>
         </li>
 
-        <router-link to="/signin">
+        <router-link v-if="!isAuthenticated" to="/signin">
           <li class="nav-item"><a class="nav-link" href="">Sign in</a></li>
         </router-link>
 
-        <router-link to="/signup" active-class="active">
+        <router-link v-if="!isAuthenticated" to="/signup" active-class="active">
           <li class="nav-item"><a class="nav-link" href="">Sign up</a></li>
         </router-link>
       </ul>
@@ -33,16 +33,8 @@
   </nav>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from "vue";
+<script setup lang="ts">
+import { useAuth } from "@/composable";
 
-export default defineComponent({
-  setup() {
-    const data = ref(0);
-
-    return {
-      data,
-    };
-  },
-});
+const { isAuthenticated, userInfo, state } = useAuth();
 </script>

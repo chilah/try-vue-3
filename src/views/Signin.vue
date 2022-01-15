@@ -25,6 +25,7 @@
                 placeholder="Password"
               />
             </fieldset>
+
             <button class="btn btn-lg btn-primary pull-xs-right">
               Sign in
             </button>
@@ -36,28 +37,27 @@
 </template>
 
 <script setup lang="ts">
-import { UserStorage } from "@/helper";
+import { useAuth } from "@/composable";
 import { postSignIn } from "@/services";
 import { AuthResponse, SignInForm, UserData } from "@/type";
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const { userInfo, updateUser, state } = useAuth();
 
 const form = reactive<SignInForm>({
-  email: "",
-  password: "",
+  email: "sawasdee@sawasdee.com",
+  password: "sawasdee",
 });
 
 const signIn = async () => {
-  const { data } = await postSignIn({ user: form });
+  const {
+    data: { user },
+  } = await postSignIn({ user: form });
 
-  const stringify = JSON.stringify(data);
-  localStorage.setItem("condotiUser", stringify);
+  updateUser(user);
+
+  // router.push("/");
 };
-
-onMounted(() => {
-  const storage = new UserStorage();
-
-  const userData = storage.getStorage<AuthResponse<UserData>>("condotiUser");
-
-  console.log(userData?.user.email);
-});
 </script>
