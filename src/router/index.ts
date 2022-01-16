@@ -17,14 +17,24 @@ const routes: Array<RouteRecordRaw> = [
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
   {
-    path: "/signup",
-    name: "Signup",
-    component: () => import("../views/Signup.vue"),
+    path: "/register",
+    name: "Register",
+    component: () => import("../views/Register.vue"),
   },
   {
-    path: "/signin",
-    name: "Signin",
-    component: () => import("../views/Signin.vue"),
+    path: "/login",
+    name: "Login",
+    component: () => import("../views/Login.vue"),
+  },
+  {
+    path: "/settings",
+    name: "Setting",
+    component: () => import("../views/Settings.vue"),
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: () => import("../views/Profile.vue"),
   },
 ];
 
