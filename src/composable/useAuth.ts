@@ -28,5 +28,6 @@ export const useAuth = () => {
     userInfo: toRef(state, "user"),
     updateUser,
     isAuthenticated,
+    userStorage,
   };
 };

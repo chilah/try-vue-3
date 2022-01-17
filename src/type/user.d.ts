@@ -24,3 +24,7 @@ export interface AuthResponse<T> {
 export interface AuthRequest<T> {
   user: T;
 }
+
+export type SettingsForm = Partial<
+  Pick<SignInForm, "password"> & Omit<UserData, "token">
+>;

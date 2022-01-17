@@ -44,7 +44,7 @@ import { onMounted, reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-const { userInfo, updateUser, state } = useAuth();
+const { userInfo, updateUser } = useAuth();
 
 const form = reactive<SignInForm>({
   email: "sawasdee@sawasdee.com",
