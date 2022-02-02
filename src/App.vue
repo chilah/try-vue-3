@@ -5,18 +5,11 @@
 
 <script lang="ts">
 import AppHeader from "@/components/AppHeader.vue";
-import { defineComponent, reactive, ref, useAttrs } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   components: {
     AppHeader,
-  },
-  setup() {
-    const data = ref(0);
-
-    return {
-      data,
-    };
   },
 });
 </script>

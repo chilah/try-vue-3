@@ -1,17 +1,17 @@
-export interface RegisterForm {
+export interface SignUpForm {
   username: string;
   email: string;
   password: string;
 }
 
 export interface SignInForm {
-  username: string;
+  email: string;
   password: string;
 }
 
 export interface UserData {
-  email: RegisterForm["email"];
-  username: RegisterForm["username"];
+  email: SignUpForm["email"];
+  username: SignUpForm["username"];
   bio: string;
   token: string;
   image: string;
@@ -24,3 +24,7 @@ export interface AuthResponse<T> {
 export interface AuthRequest<T> {
   user: T;
 }
+
+export type SettingsForm = Partial<
+  Pick<SignInForm, "password"> & Omit<UserData, "token">
+>;

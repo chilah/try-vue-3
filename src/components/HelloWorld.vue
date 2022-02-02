@@ -16,14 +16,14 @@ export default defineComponent({
   setup() {
     const { user, fetchProfile, state } = useTest();
 
-    onMounted(async () => {
-      await fetchProfile();
+    // onMounted(async () => {
+    //   await fetchProfile();
 
-      console.log("state", state.profile?.username);
-    });
+    //   console.log("state", state.profile?.username);
+    // });
 
     return {
-      user,
+      aaa:
     };
   },
 });

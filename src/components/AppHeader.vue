@@ -1,48 +1,63 @@
 <template>
   <nav class="navbar navbar-light">
     <div class="container">
-      <a class="navbar-brand" href="index.html">conduit</a>
+      <a class="navbar-brand">conduit</a>
       <ul class="nav navbar-nav pull-xs-right">
-        <router-link to="/">
-          <li class="nav-item"><a class="nav-link active" href="">Home</a></li>
-        </router-link>
-
-        <router-link to="/about">
-          <li class="nav-item">
-            <a class="nav-link" href="">
-              <i class="ion-compose"></i>&nbsp;New Article
-            </a>
-          </li>
-        </router-link>
-
-        <li class="nav-item">
-          <a class="nav-link" href="">
-            <i class="ion-gear-a"></i>&nbsp;Settings
-          </a>
+        <li v-for="nav in navLinks" class="nav-item" :key="nav.name">
+          <template v-if="nav.auth === isAuthenticated">
+            <router-link :to="nav.path">
+              <a class="nav-link active" href="">{{ nav.name }}</a>
+            </router-link>
+          </template>
         </li>
-
-        <router-link to="/signin">
-          <li class="nav-item"><a class="nav-link" href="">Sign in</a></li>
-        </router-link>
-
-        <router-link to="/signup" active-class="active">
-          <li class="nav-item"><a class="nav-link" href="">Sign up</a></li>
-        </router-link>
       </ul>
     </div>
   </nav>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from "vue";
+<script setup lang="ts">
+import { useAuth } from "@/composable";
+import { computed } from "vue";
 
-export default defineComponent({
-  setup() {
-    const data = ref(0);
+interface NavLink {
+  name: string;
+  path: string;
+  param?: string;
+  auth: boolean;
+}
 
-    return {
-      data,
-    };
+const { isAuthenticated, userInfo } = useAuth();
+
+const navLinks = computed<NavLink[]>(() => [
+  {
+    name: "Home",
+    path: "/home",
+    auth: false,
   },
-});
+  {
+    name: "New Article",
+    path: "/editor",
+    auth: true,
+  },
+  {
+    name: "Settings",
+    path: "/settings",
+    auth: true,
+  },
+  {
+    name: userInfo.value?.username ?? "Profile",
+    path: "/profile",
+    auth: true,
+  },
+  {
+    name: "Sign In",
+    path: "/login",
+    auth: false,
+  },
+  {
+    name: "Sign Up",
+    path: "/register",
+    auth: false,
+  },
+]);
 </script>

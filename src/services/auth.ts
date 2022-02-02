@@ -1,17 +1,19 @@
 import {
   AuthRequest,
-  RegisterForm,
+  SignUpForm,
   SignInForm,
   AuthResponse,
   UserData,
+  SettingsForm,
 } from "@/type";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import baseInstance from "./request";
 
 const AUTH_API_PATH = "/users";
+const USER_API_PATH = "/user";
 
-export const submitRegister = async (
-  form: AuthRequest<RegisterForm>
+export const postSignUp = async (
+  form: AuthRequest<SignUpForm>
 ): Promise<AxiosResponse<AuthResponse<UserData>>> => {
   try {
     const response = await baseInstance.post<AuthResponse<UserData>>(
@@ -25,11 +27,28 @@ export const submitRegister = async (
   }
 };
 
-export const submitLogin = async (
+export const postSignIn = async (
   form: AuthRequest<SignInForm>
 ): Promise<AxiosResponse<AuthResponse<UserData>>> => {
   try {
     const response = await baseInstance.post(`${AUTH_API_PATH}/login`, form);
+
+    return response;
+  } catch (error) {
+    const err = error as AxiosError;
+
+    throw err.response;
+  }
+};
+
+export const updateSetting = async (
+  form: AuthRequest<SettingsForm>
+): Promise<AxiosResponse<AuthResponse<UserData>>> => {
+  try {
+    const response = await baseInstance.put<AuthResponse<UserData>>(
+      `${USER_API_PATH}`,
+      form
+    );
 
     return response;
   } catch (error) {
