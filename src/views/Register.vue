@@ -8,8 +8,8 @@
             <a href="">Have an account?</a>
           </p>
 
-          <ul class="error-messages">
-            <li>That email is already taken</li>
+          <ul v-if="isSuccess === false" class="error-messages">
+            <li>That email/username is already taken</li>
           </ul>
 
           <form id="register-form" @submit.prevent="register">
@@ -47,20 +47,44 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import { useAuth } from "@/composable";
 import { postSignUp } from "@/services";
 import { SignUpForm } from "@/type";
-import { reactive } from "vue";
+import { reactive, defineComponent, ref } from "vue";
+import { useRouter } from "vue-router";
 
-const registerForm = reactive<SignUpForm>({
-  username: "",
-  email: "",
-  password: "",
+export default defineComponent({
+  setup() {
+    const router = useRouter();
+    const isSuccess = ref<boolean | null>(null);
+
+    const registerForm = reactive<SignUpForm>({
+      username: "sawasdee",
+      email: "sawasdee@sawasdee.com",
+      password: "sawasdee",
+    });
+
+    const register = async () => {
+      try {
+        const {
+          data: { user },
+        } = await postSignUp({ user: registerForm });
+
+        const { updateUser } = useAuth();
+        updateUser(user);
+
+        router.push("/profile");
+      } catch (error) {
+        isSuccess.value = false;
+      }
+    };
+
+    return {
+      registerForm,
+      register,
+      isSuccess,
+    };
+  },
 });
-
-const register = async () => {
-  const response = await postSignUp({ user: registerForm });
-
-  console.log(response);
-};
 </script>

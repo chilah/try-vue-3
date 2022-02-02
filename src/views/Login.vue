@@ -4,6 +4,11 @@
       <div class="row">
         <div class="col-md-6 offset-md-3 col-xs-12">
           <h1 class="text-xs-center">Sign in</h1>
+
+          <ul v-if="isSuccess === false" class="error-messages">
+            <li>That email/password is invalid</li>
+          </ul>
+
           <p class="text-xs-center">
             <a href="">Need an account?</a>
           </p>
@@ -36,28 +41,45 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import { defineComponent } from "vue";
 import { useAuth } from "@/composable";
 import { postSignIn } from "@/services";
-import { AuthResponse, SignInForm, UserData } from "@/type";
-import { onMounted, reactive, ref, watch } from "vue";
+import { SignInForm } from "@/type";
+import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
-const router = useRouter();
-const { userInfo, updateUser } = useAuth();
+export default defineComponent({
+  setup() {
+    const router = useRouter();
+    const { updateUser } = useAuth();
 
-const form = reactive<SignInForm>({
-  email: "sawasdee@sawasdee.com",
-  password: "sawasdee",
+    const isSuccess = ref<boolean | null>(null);
+
+    const form = reactive<SignInForm>({
+      email: "sawasdee@sawasdee.com",
+      password: "sawasdee",
+    });
+
+    const signIn = async () => {
+      try {
+        const {
+          data: { user },
+        } = await postSignIn({ user: form });
+
+        updateUser(user);
+
+        router.push("/profile");
+      } catch (error) {
+        isSuccess.value = false;
+      }
+    };
+
+    return {
+      signIn,
+      form,
+      isSuccess,
+    };
+  },
 });
-
-const signIn = async () => {
-  const {
-    data: { user },
-  } = await postSignIn({ user: form });
-
-  updateUser(user);
-
-  // router.push("/");
-};
 </script>

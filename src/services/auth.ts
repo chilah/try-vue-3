@@ -6,7 +6,7 @@ import {
   UserData,
   SettingsForm,
 } from "@/type";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import baseInstance from "./request";
 
 const AUTH_API_PATH = "/users";
@@ -35,7 +35,9 @@ export const postSignIn = async (
 
     return response;
   } catch (error) {
-    throw new Error(`[Error]: ${error}`);
+    const err = error as AxiosError;
+
+    throw err.response;
   }
 };
 
