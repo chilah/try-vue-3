@@ -4,15 +4,18 @@
       <div class="container">
         <div class="row">
           <div class="col-xs-12 col-md-10 offset-md-1">
-            <img src="http://i.imgur.com/Qr71crq.jpg" class="user-img" />
-            <h4>Eric Simons</h4>
+            <img :src="profileInfo?.image" class="user-img" />
+            <h4>{{ profileInfo?.username }}</h4>
             <p>
-              Cofounder @GoThinkster, lived in Aol's HQ for a few months, kinda
-              looks like Peeta from the Hunger Games
+              {{ profileInfo?.bio }}
             </p>
-            <button class="btn btn-sm btn-outline-secondary action-btn">
+
+            <button
+              v-if="toggleFollowBtn"
+              class="btn btn-sm btn-outline-secondary action-btn"
+            >
               <i class="ion-plus-round"></i>
-              &nbsp; Follow Eric Simons
+              &nbsp; Follow {{ profileInfo?.username }}
             </button>
           </div>
         </div>
@@ -80,3 +83,43 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { useAuth } from "@/composable";
+import { getProfile } from "@/services";
+import { IProfile } from "@/type";
+import { computed, onMounted, ref, watch } from "vue";
+import { useRoute } from "vue-router";
+
+const router = useRoute();
+const { userInfo } = useAuth();
+const username = computed<string>(() => router.params.username as string);
+
+const profileInfo = ref<IProfile>();
+
+const getCurrentProfile = async () => {
+  try {
+    const {
+      data: { profile },
+    } = await getProfile(username.value);
+
+    profileInfo.value = profile;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const toggleFollowBtn = computed<boolean>(() => {
+  if (userInfo.value?.username === profileInfo.value?.username) {
+    return false;
+  }
+
+  return true;
+});
+
+onMounted(() => {
+  getCurrentProfile();
+});
+
+watch(username, getCurrentProfile);
+</script>

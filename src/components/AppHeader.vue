@@ -46,7 +46,7 @@ const navLinks = computed<NavLink[]>(() => [
   },
   {
     name: userInfo.value?.username ?? "Profile",
-    path: "/profile",
+    path: `/profile/${userInfo.value?.username}`,
     auth: true,
   },
   {
