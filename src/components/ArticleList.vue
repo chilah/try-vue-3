@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineEmits, defineProps } from "vue";
 import { ArticleDetail } from "@/type";
 
 interface Props {

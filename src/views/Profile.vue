@@ -50,38 +50,12 @@
             </ul>
           </div>
 
-          <template v-if="articleTab === 'my-articles'">
-            <ArticleList
-              v-for="(article, index) in articles"
-              :key="article.body"
-              :article="article"
-              @favorite="submitFavorite(index, article.slug, article.favorited)"
-            />
-          </template>
-
-          <template v-if="articleTab === 'my-favorties'">
-            <div
-              v-for="article in articles"
-              class="article-preview"
-              :key="article.body"
-            >
-              <div class="article-meta">
-                <a href=""><img :src="article.author.image" /></a>
-                <div class="info">
-                  <a href="" class="author">zzzz</a>
-                  <span class="date">xxx </span>
-                </div>
-                <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                  <i class="ion-heart"></i> 1
-                </button>
-              </div>
-              <a href="" class="preview-link">
-                <h1>cccc</h1>
-                <p>vvvv</p>
-                <span>Read more...</span>
-              </a>
-            </div>
-          </template>
+          <ArticleList
+            v-for="(article, index) in articles"
+            :key="article.body"
+            :article="article"
+            @favorite="submitFavorite(index, article.slug, article.favorited)"
+          />
         </div>
       </div>
     </div>
