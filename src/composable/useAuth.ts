@@ -1,6 +1,6 @@
 import { UserStorage } from "@/helper";
 import { AuthResponse, UserData } from "@/type";
-import { computed, onMounted, reactive, ref, toRef, watch } from "vue-demi";
+import { computed, onMounted, reactive, toRef } from "vue-demi";
 
 const userStorage = new UserStorage("user");
 
