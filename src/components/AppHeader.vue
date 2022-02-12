@@ -35,7 +35,7 @@ const navLinks = computed<NavLink[]>(() => [
     auth: false,
   },
   {
-    name: "New Article",
+    name: "New ArticleDetail",
     path: "/editor",
     auth: true,
   },

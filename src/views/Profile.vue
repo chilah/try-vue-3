@@ -31,9 +31,9 @@
                 <a
                   class="nav-link"
                   :class="{
-                    active: articleTab === 'my-article',
+                    active: articleTab === 'my-articles',
                   }"
-                  @click="toggleCurrentTab('my-article')"
+                  @click="toggleCurrentTab('my-articles')"
                   >My Articles</a
                 >
               </li>
@@ -41,16 +41,16 @@
                 <a
                   class="nav-link"
                   :class="{
-                    active: articleTab === 'favorite-article',
+                    active: articleTab === 'my-favorties',
                   }"
-                  @click="toggleCurrentTab('favorite-article')"
+                  @click="toggleCurrentTab('my-favorties')"
                   >Favorited Articles</a
                 >
               </li>
             </ul>
           </div>
 
-          <template v-if="articleTab === 'my-article'">
+          <template v-if="articleTab === 'my-articles'">
             <div
               v-for="(article, index) in articles"
               class="article-preview"
@@ -63,8 +63,13 @@
                   <span class="date">{{ article.createdAt }} </span>
                 </div>
                 <button
-                  class="btn btn-outline-primary btn-sm pull-xs-right"
-                  @click="submitFavorite(index, article.slug)"
+                  class="btn btn-sm pull-xs-right"
+                  :class="[
+                    article.favorited ? 'btn-primary' : 'btn-outline-primary',
+                  ]"
+                  @click="
+                    submitFavorite(index, article.slug, article.favorited)
+                  "
                 >
                   <i class="ion-heart"></i> {{ article.favoritesCount }}
                 </button>
@@ -77,7 +82,7 @@
             </div>
           </template>
 
-          <template v-if="articleTab === 'favorite-article'">
+          <template v-if="articleTab === 'my-favorties'">
             <div
               v-for="article in articles"
               class="article-preview"
@@ -108,20 +113,25 @@
 
 <script setup lang="ts">
 import { useAuth } from "@/composable";
-import { getArticles, getProfile, postFavorite } from "@/services";
-import { Article, IProfile } from "@/type";
+import {
+  getArticles,
+  getProfile,
+  postFavorite,
+  postUnfavorite,
+} from "@/services";
+import { ArticleDetail, IProfile } from "@/type";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
-type ArticleTabType = "my-article" | "favorite-article";
+type ArticleTabType = "my-articles" | "my-favorties";
 
 const router = useRoute();
 const { userInfo } = useAuth();
 const username = computed<string>(() => router.params.username as string);
 
 const profileInfo = ref<IProfile>();
-const articles = ref<Article[]>([]);
-const articleTab = ref<ArticleTabType>("my-article");
+const articles = ref<ArticleDetail[]>([]);
+const articleTab = ref<ArticleTabType>("my-articles");
 
 const getCurrentProfile = async () => {
   try {
@@ -153,23 +163,57 @@ const getCurrentArticles = async () => {
   }
 };
 
-const submitFavorite = async (index: number, slug: string) => {
+const submitFavorite = async (
+  index: number,
+  slug: string,
+  hasFavorited: boolean
+) => {
   try {
-    const { data } = await postFavorite(slug);
+    if (hasFavorited) {
+      const { data } = await postUnfavorite(slug);
 
-    articles.value[index] = data;
+      updateArticle(index, data.article);
+    } else {
+      const { data } = await postFavorite(slug);
+
+      updateArticle(index, data.article);
+    }
   } catch (error) {
     console.log(error);
   }
+};
+
+const updateArticle = (index: number, article: ArticleDetail) => {
+  articles.value[index] = article;
 };
 
 const toggleCurrentTab = (tabName: ArticleTabType) => {
   articleTab.value = tabName;
 };
 
+const getArticlesType = async () => {
+  articles.value = [];
+
+  if (articleTab.value === "my-articles") {
+    const { data } = await getArticles({ author: profileInfo.value?.username });
+
+    articles.value = data.articles;
+  }
+
+  if (articleTab.value === "my-favorties") {
+    const { data } = await getArticles({
+      favorited: profileInfo.value?.username,
+    });
+
+    articles.value = data.articles;
+  }
+};
+
+watch(articleTab, () => getArticlesType());
+
 onMounted(async () => {
   await getCurrentProfile();
-  await getCurrentArticles();
+  await getArticlesType();
 });
 
 watch(username, getCurrentProfile);

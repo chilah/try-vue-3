@@ -1,4 +1,4 @@
-import { Article, ArticlesResponse } from "@/type";
+import { Article, ArticleDetail, ArticlesResponse } from "@/type";
 import { AxiosError, AxiosResponse } from "axios";
 import baseInstance from "./request";
 
@@ -51,6 +51,20 @@ export const getArticles = async ({
 export const postFavorite = async (slug: string): AxiosPromise<Article> => {
   try {
     const response = await baseInstance.post<Article>(
+      `${ARTICLE_API_PATH}/${slug}/favorite`
+    );
+
+    return response;
+  } catch (error) {
+    const err = error as AxiosError;
+
+    throw err;
+  }
+};
+
+export const postUnfavorite = async (slug: string): AxiosPromise<Article> => {
+  try {
+    const response = await baseInstance.delete<Article>(
       `${ARTICLE_API_PATH}/${slug}/favorite`
     );
 
