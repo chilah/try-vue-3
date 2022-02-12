@@ -51,35 +51,12 @@
           </div>
 
           <template v-if="articleTab === 'my-articles'">
-            <div
+            <ArticleList
               v-for="(article, index) in articles"
-              class="article-preview"
               :key="article.body"
-            >
-              <div class="article-meta">
-                <a href=""><img :src="article.author.image" /></a>
-                <div class="info">
-                  <a href="" class="author">{{ article.author.username }} </a>
-                  <span class="date">{{ article.createdAt }} </span>
-                </div>
-                <button
-                  class="btn btn-sm pull-xs-right"
-                  :class="[
-                    article.favorited ? 'btn-primary' : 'btn-outline-primary',
-                  ]"
-                  @click="
-                    submitFavorite(index, article.slug, article.favorited)
-                  "
-                >
-                  <i class="ion-heart"></i> {{ article.favoritesCount }}
-                </button>
-              </div>
-              <a href="" class="preview-link">
-                <h1>{{ article.title }}</h1>
-                <p>{{ article.body }}</p>
-                <span>Read more...</span>
-              </a>
-            </div>
+              :article="article"
+              @favorite="submitFavorite(index, article.slug, article.favorited)"
+            />
           </template>
 
           <template v-if="articleTab === 'my-favorties'">
@@ -122,6 +99,7 @@ import {
 import { ArticleDetail, IProfile } from "@/type";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import ArticleList from "@/components/ArticleList.vue";
 
 type ArticleTabType = "my-articles" | "my-favorties";
 
@@ -152,16 +130,6 @@ const toggleFollowBtn = computed<boolean>(() => {
 
   return true;
 });
-
-const getCurrentArticles = async () => {
-  try {
-    const { data } = await getArticles({ author: profileInfo.value?.username });
-
-    articles.value = data.articles;
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 const submitFavorite = async (
   index: number,
