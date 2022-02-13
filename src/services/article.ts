@@ -1,4 +1,4 @@
-import { Article, ArticleDetail, ArticlesResponse } from "@/type";
+import { Article, ArticlesResponse } from "@/type";
 import { AxiosError, AxiosResponse } from "axios";
 import baseInstance from "./request";
 
