@@ -6,9 +6,21 @@ interface UseArticleProps {
   profileInfo: Ref<IProfile | undefined>;
 }
 
+interface UsableArticle {
+  articles: Ref<ArticleDetail[]>;
+  articleTab: Ref<ArticleTabType>;
+  updateArticle: (index: number, article: ArticleDetail) => void;
+  toggleCurrentTab: (tabName: ArticleTabType) => void;
+  submitFavorite: (
+    index: number,
+    slug: string,
+    hasFavorited: boolean
+  ) => Promise<void>;
+}
+
 type ArticleTabType = "my-articles" | "my-favorties";
 
-export const useArticle = ({ profileInfo }: UseArticleProps) => {
+export const useArticle = ({ profileInfo }: UseArticleProps): UsableArticle => {
   const articles = ref<ArticleDetail[]>([]);
   const articleTab = ref<ArticleTabType>("my-articles");
 

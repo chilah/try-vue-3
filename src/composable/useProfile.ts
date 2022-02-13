@@ -1,13 +1,18 @@
 import { getProfile } from "@/services";
 import { IProfile } from "@/type";
-import { computed, ComputedRef, onMounted, ref, watch } from "vue";
+import { computed, ComputedRef, onMounted, Ref, ref, watch } from "vue";
 import { useAuth } from ".";
 
 interface UseProfileProps {
   username: ComputedRef<string>;
 }
 
-export const useProfile = ({ username }: UseProfileProps) => {
+interface UsableProfile {
+  profileInfo: Ref<IProfile | undefined>;
+  toggleFollowBtn: ComputedRef<boolean>;
+}
+
+export const useProfile = ({ username }: UseProfileProps): UsableProfile => {
   const { userInfo } = useAuth();
   const profileInfo = ref<IProfile>();
 
