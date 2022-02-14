@@ -40,7 +40,7 @@ export const useProfile = ({ username }: UseProfileProps): UsableProfile => {
     getCurrentProfile();
   });
 
-  watch(username, getCurrentProfile);
+  watch(username, getCurrentProfile, { immediate: true });
 
   return {
     profileInfo,

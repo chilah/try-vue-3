@@ -16,9 +16,13 @@ const emits = defineEmits<Emits>();
 <template>
   <div class="article-preview">
     <div class="article-meta">
-      <a href=""><img :src="props.article.author.image" /></a>
+      <router-link :to="`/profile/${props.article.author.username}`">
+        <a href=""><img :src="props.article.author.image" /></a>
+      </router-link>
       <div class="info">
-        <a href="" class="author">{{ props.article.author.username }} </a>
+        <router-link :to="`/profile/${props.article.author.username}`">
+          <a href="" class="author">{{ props.article.author.username }} </a>
+        </router-link>
         <span class="date">{{ props.article.createdAt }} </span>
       </div>
       <button

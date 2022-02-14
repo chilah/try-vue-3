@@ -1,3 +1,18 @@
+<script setup lang="ts">
+import { useArticle, useProfile } from "@/composable";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import ArticleList from "@/components/ArticleList.vue";
+
+const router = useRoute();
+const username = computed<string>(() => router.params.username as string);
+
+const { profileInfo, toggleFollowBtn } = useProfile({ username });
+const { articles, articleTab, toggleCurrentTab, submitFavorite } = useArticle({
+  profileInfo,
+});
+</script>
+
 <template>
   <div class="profile-page">
     <div class="user-info">
@@ -61,18 +76,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useArticle, useProfile } from "@/composable";
-import { computed } from "vue";
-import { useRoute } from "vue-router";
-import ArticleList from "@/components/ArticleList.vue";
-
-const router = useRoute();
-const username = computed<string>(() => router.params.username as string);
-
-const { profileInfo, toggleFollowBtn } = useProfile({ username });
-const { articles, articleTab, toggleCurrentTab, submitFavorite } = useArticle({
-  profileInfo,
-});
-</script>

@@ -77,6 +77,10 @@ export const useArticle = ({ profileInfo }: UseArticleProps): UsableArticle => {
   });
 
   watch(articleTab, getArticlesType);
+  watch(profileInfo, () => {
+    toggleCurrentTab("my-articles");
+    getArticlesType();
+  });
 
   return {
     articles,
