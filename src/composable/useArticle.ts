@@ -72,10 +72,6 @@ export const useArticle = ({ profileInfo }: UseArticleProps): UsableArticle => {
     }
   };
 
-  onMounted(() => {
-    getArticlesType();
-  });
-
   watch(articleTab, getArticlesType);
   watch(profileInfo, () => {
     toggleCurrentTab("my-articles");

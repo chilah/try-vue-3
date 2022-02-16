@@ -7,8 +7,11 @@ import ArticleList from "@/components/ArticleList.vue";
 const router = useRoute();
 const username = computed<string>(() => router.params.username as string);
 
-const { profileInfo, toggleFollowBtn } = useProfile({ username });
+const { profileInfo, isCurrentUser, hasFollowed, followUser } = useProfile({
+  username,
+});
 const { articles, articleTab, toggleCurrentTab, submitFavorite } = useArticle({
+  username,
   profileInfo,
 });
 </script>
@@ -26,11 +29,21 @@ const { articles, articleTab, toggleCurrentTab, submitFavorite } = useArticle({
             </p>
 
             <button
-              v-if="toggleFollowBtn"
+              v-if="!isCurrentUser"
+              class="btn btn-sm btn-outline-secondary action-btn"
+              @click="followUser"
+            >
+              <i class="ion-plus-round"></i>
+              &nbsp; {{ hasFollowed ? "Unfollow" : "Follow" }}
+              {{ profileInfo?.username }}
+            </button>
+
+            <button
+              v-if="isCurrentUser"
               class="btn btn-sm btn-outline-secondary action-btn"
             >
               <i class="ion-plus-round"></i>
-              &nbsp; Follow {{ profileInfo?.username }}
+              &nbsp; Edit Profile Settings
             </button>
           </div>
         </div>

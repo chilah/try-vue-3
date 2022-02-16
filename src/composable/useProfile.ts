@@ -1,6 +1,6 @@
-import { getProfile } from "@/services";
+import { getProfile, postFollowUser, postUnfollowUser } from "@/services";
 import { IProfile } from "@/type";
-import { computed, ComputedRef, onMounted, Ref, ref, watch } from "vue";
+import { computed, ComputedRef, Ref, ref, watch } from "vue";
 import { useAuth } from ".";
 
 interface UseProfileProps {
@@ -9,7 +9,9 @@ interface UseProfileProps {
 
 interface UsableProfile {
   profileInfo: Ref<IProfile | undefined>;
-  toggleFollowBtn: ComputedRef<boolean>;
+  isCurrentUser: ComputedRef<boolean>;
+  hasFollowed: ComputedRef<boolean>;
+  followUser: () => Promise<void>;
 }
 
 export const useProfile = ({ username }: UseProfileProps): UsableProfile => {
@@ -18,6 +20,8 @@ export const useProfile = ({ username }: UseProfileProps): UsableProfile => {
 
   const getCurrentProfile = async () => {
     try {
+      if (!username.value) return;
+
       const {
         data: { profile },
       } = await getProfile(username.value);
@@ -28,22 +32,54 @@ export const useProfile = ({ username }: UseProfileProps): UsableProfile => {
     }
   };
 
-  const toggleFollowBtn = computed<boolean>(() => {
+  const followUser = async () => {
+    try {
+      if (profileInfo.value?.username) {
+        let profileResponse: IProfile | undefined;
+
+        if (profileInfo.value.following) {
+          const {
+            data: { profile },
+          } = await postUnfollowUser(profileInfo.value.username);
+
+          profileResponse = profile;
+        } else {
+          const {
+            data: { profile },
+          } = await postFollowUser(profileInfo.value.username);
+
+          profileResponse = profile;
+        }
+
+        profileInfo.value = profileResponse;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const isCurrentUser = computed<boolean>(() => {
     if (userInfo.value?.username === profileInfo.value?.username) {
-      return false;
+      return true;
     }
 
-    return true;
+    return false;
   });
 
-  onMounted(() => {
-    getCurrentProfile();
+  const hasFollowed = computed<boolean>(() => {
+    if (profileInfo.value?.following) {
+      return true;
+    }
+
+    return false;
   });
 
   watch(username, getCurrentProfile, { immediate: true });
 
   return {
     profileInfo,
-    toggleFollowBtn,
+    isCurrentUser,
+    hasFollowed,
+    followUser,
   };
 };
