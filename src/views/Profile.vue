@@ -10,10 +10,7 @@ const username = computed<string>(() => router.params.username as string);
 const { profileInfo, isCurrentUser, hasFollowed, followUser } = useProfile({
   username,
 });
-const { articles, articleTab, toggleCurrentTab, submitFavorite } = useArticle({
-  username,
-  profileInfo,
-});
+const { articles, articleTab, toggleCurrentTab, submitFavorite } = useArticle();
 </script>
 
 <template>

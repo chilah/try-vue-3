@@ -1,11 +1,7 @@
 import { getArticles, postFavorite, postUnfavorite } from "@/services";
-import { ArticleDetail, IProfile } from "@/type";
-import { onMounted, Ref, ref, watch } from "vue";
-
-interface UseArticleProps {
-  profileInfo: Ref<IProfile | undefined>;
-}
-
+import { ArticleDetail } from "@/type";
+import { Ref, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 interface UsableArticle {
   articles: Ref<ArticleDetail[]>;
   articleTab: Ref<ArticleTabType>;
@@ -20,9 +16,12 @@ interface UsableArticle {
 
 type ArticleTabType = "my-articles" | "my-favorties";
 
-export const useArticle = ({ profileInfo }: UseArticleProps): UsableArticle => {
+export const useArticle = (): UsableArticle => {
   const articles = ref<ArticleDetail[]>([]);
   const articleTab = ref<ArticleTabType>("my-articles");
+
+  const route = useRoute();
+  const username = ref("");
 
   const submitFavorite = async (
     index: number,
@@ -57,7 +56,7 @@ export const useArticle = ({ profileInfo }: UseArticleProps): UsableArticle => {
 
     if (articleTab.value === "my-articles") {
       const { data } = await getArticles({
-        author: profileInfo.value?.username,
+        author: username.value,
       });
 
       articles.value = data.articles;
@@ -65,7 +64,7 @@ export const useArticle = ({ profileInfo }: UseArticleProps): UsableArticle => {
 
     if (articleTab.value === "my-favorties") {
       const { data } = await getArticles({
-        favorited: profileInfo.value?.username,
+        favorited: username.value,
       });
 
       articles.value = data.articles;
@@ -73,10 +72,23 @@ export const useArticle = ({ profileInfo }: UseArticleProps): UsableArticle => {
   };
 
   watch(articleTab, getArticlesType);
-  watch(profileInfo, () => {
+
+  watch(username, () => {
     toggleCurrentTab("my-articles");
     getArticlesType();
   });
+
+  watch(
+    () => route.params.username,
+    (newValue) => {
+      if (typeof newValue === "string") {
+        username.value = newValue;
+      }
+    },
+    {
+      immediate: true,
+    }
+  );
 
   return {
     articles,
