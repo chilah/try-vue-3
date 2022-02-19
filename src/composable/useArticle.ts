@@ -1,42 +1,67 @@
-import { getArticles, postFavorite, postUnfavorite } from "@/services";
-import { ArticleDetail } from "@/type";
-import { Ref, ref, watch } from "vue";
+import {
+  getArticleDetail,
+  getArticles,
+  postFavorite,
+  postUnfavorite,
+  getComments,
+  postComment,
+  deleteArticle,
+} from "@/services";
+import { Article, ArticleDetail, Comment } from "@/type";
+import { Ref, ref, toRef, watch } from "vue";
 import { useRoute } from "vue-router";
-interface UsableArticle {
+interface UseArticleReturn {
   articles: Ref<ArticleDetail[]>;
   articleTab: Ref<ArticleTabType>;
   updateArticle: (index: number, article: ArticleDetail) => void;
   toggleCurrentTab: (tabName: ArticleTabType) => void;
   submitFavorite: (
-    index: number,
+    index: number | null,
     slug: string,
     hasFavorited: boolean
   ) => Promise<void>;
+  articleDetail: Ref<ArticleDetail | undefined>;
+  getArticleBySlug: (slug: string) => Promise<void>;
+  comments: Ref<Comment[]>;
+  getCommentsBySlug: (slug: string) => Promise<void>;
+  submitComment: (slug: string, comment: string) => Promise<void>;
+  submitDeleteArticle: (slug: string) => Promise<void>;
 }
 
 type ArticleTabType = "my-articles" | "my-favorties";
 
-export const useArticle = (): UsableArticle => {
+export const useArticle = (): UseArticleReturn => {
   const articles = ref<ArticleDetail[]>([]);
   const articleTab = ref<ArticleTabType>("my-articles");
+  const articleDetail = ref<ArticleDetail>();
+
+  const comments = ref<Comment[]>([]);
 
   const route = useRoute();
-  const username = ref("");
+  const username = ref<string>("");
 
   const submitFavorite = async (
-    index: number,
+    index: number | null,
     slug: string,
     hasFavorited: boolean
   ) => {
     try {
+      let response: Article;
+
       if (hasFavorited) {
         const { data } = await postUnfavorite(slug);
 
-        updateArticle(index, data.article);
+        response = data;
       } else {
         const { data } = await postFavorite(slug);
 
-        updateArticle(index, data.article);
+        response = data;
+      }
+
+      if (index) {
+        updateArticle(index, response.article);
+      } else {
+        articleDetail.value = response.article;
       }
     } catch (error) {
       console.log(error);
@@ -71,6 +96,44 @@ export const useArticle = (): UsableArticle => {
     }
   };
 
+  const getArticleBySlug = async (slug: string) => {
+    try {
+      const { data } = await getArticleDetail(slug);
+
+      articleDetail.value = data.article;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getCommentsBySlug = async (slug: string) => {
+    try {
+      const { data } = await getComments(slug);
+
+      comments.value = data.comments;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const submitComment = async (slug: string, comment: string) => {
+    try {
+      const { data } = await postComment(slug, comment);
+
+      comments.value.unshift(data.comment);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const submitDeleteArticle = async (slug: string) => {
+    try {
+      await deleteArticle(slug);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   watch(articleTab, getArticlesType);
 
   watch(username, () => {
@@ -96,5 +159,11 @@ export const useArticle = (): UsableArticle => {
     updateArticle,
     toggleCurrentTab,
     submitFavorite,
+    articleDetail,
+    getArticleBySlug,
+    comments,
+    getCommentsBySlug,
+    submitComment,
+    submitDeleteArticle,
   };
 };

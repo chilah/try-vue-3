@@ -35,10 +35,12 @@ const emits = defineEmits<Emits>();
         <i class="ion-heart"></i> {{ props.article.favoritesCount }}
       </button>
     </div>
-    <a href="" class="preview-link">
-      <h1>{{ props.article.title }}</h1>
-      <p>{{ props.article.body }}</p>
-      <span>Read more...</span>
-    </a>
+    <router-link :to="`/article/${props.article.slug}`">
+      <a href="" class="preview-link">
+        <h1>{{ props.article.title }}</h1>
+        <p>{{ props.article.body }}</p>
+        <span>Read more...</span>
+      </a>
+    </router-link>
   </div>
 </template>

@@ -1,10 +1,18 @@
-import { UserData } from ".";
+export interface FollowedBy {
+  id: number;
+  bio: string;
+  username: string;
+  image: string;
+  password: string;
+  demo: boolean;
+}
 
 export interface Author {
-  bio: Pick<UserData, "bio">;
-  username: Pick<UserData, "username">;
+  bio: string;
+  username: string;
   image: string;
   following: boolean;
+  followedBy?: FollowedBy[];
 }
 
 export interface ArticleDetail {
@@ -27,4 +35,20 @@ export interface Article {
 export interface ArticlesResponse {
   articles: ArticleDetail[];
   articlesCount: number;
+}
+
+export interface Comment {
+  id: number;
+  createAt: Date;
+  updateAt: Date;
+  body: string;
+  author: Author;
+}
+
+export interface CommentsResponse {
+  comments: Comment[];
+}
+
+export interface CommentResponse {
+  comment: Comment;
 }
