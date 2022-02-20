@@ -73,10 +73,10 @@ import { onMounted, reactive } from "vue";
 const { userInfo, updateUser } = useAuth();
 
 const form = reactive<SettingsForm>({
-  image: "",
+  image: userInfo.value?.image ?? "",
   username: userInfo.value?.username ?? "",
-  bio: "",
-  email: "",
+  bio: userInfo.value?.bio ?? "",
+  email: userInfo.value?.email ?? "",
   password: "",
 });
 

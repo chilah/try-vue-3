@@ -1,3 +1,35 @@
+<script setup lang="ts">
+import { useAuth } from "@/composable";
+import { postSignIn } from "@/services";
+import { SignInForm } from "@/type";
+import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const { updateUser } = useAuth();
+
+const isSuccess = ref<boolean | null>(null);
+
+const form = reactive<SignInForm>({
+  email: "sawasdee@sawasdee.com",
+  password: "sawasdee",
+});
+
+const signIn = async () => {
+  try {
+    const {
+      data: { user },
+    } = await postSignIn({ user: form });
+
+    updateUser(user);
+
+    router.push(`/profile/${user.username}`);
+  } catch (error) {
+    isSuccess.value = false;
+  }
+};
+</script>
+
 <template>
   <div class="auth-page">
     <div class="container page">
@@ -40,46 +72,3 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-import { useAuth } from "@/composable";
-import { postSignIn } from "@/services";
-import { SignInForm } from "@/type";
-import { reactive, ref } from "vue";
-import { useRouter } from "vue-router";
-
-export default defineComponent({
-  setup() {
-    const router = useRouter();
-    const { updateUser } = useAuth();
-
-    const isSuccess = ref<boolean | null>(null);
-
-    const form = reactive<SignInForm>({
-      email: "sawasdee@sawasdee.com",
-      password: "sawasdee",
-    });
-
-    const signIn = async () => {
-      try {
-        const {
-          data: { user },
-        } = await postSignIn({ user: form });
-
-        updateUser(user);
-
-        router.push("/profile");
-      } catch (error) {
-        isSuccess.value = false;
-      }
-    };
-
-    return {
-      signIn,
-      form,
-      isSuccess,
-    };
-  },
-});
-</script>

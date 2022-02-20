@@ -35,13 +35,15 @@ const { articles, articleTab, toggleCurrentTab, submitFavorite } = useArticle();
               {{ profileInfo?.username }}
             </button>
 
-            <button
-              v-if="isCurrentUser"
-              class="btn btn-sm btn-outline-secondary action-btn"
-            >
-              <i class="ion-plus-round"></i>
-              &nbsp; Edit Profile Settings
-            </button>
+            <router-link to="/settings">
+              <button
+                v-if="isCurrentUser"
+                class="btn btn-sm btn-outline-secondary action-btn"
+              >
+                <i class="ion-plus-round"></i>
+                &nbsp; Edit Profile Settings
+              </button>
+            </router-link>
           </div>
         </div>
       </div>

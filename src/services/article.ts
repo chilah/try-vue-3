@@ -4,8 +4,9 @@ import {
   ArticlesResponse,
   CommentResponse,
   CommentsResponse,
+  Tags,
 } from "@/type";
-import { AxiosError, AxiosResponse } from "axios";
+import { Axios, AxiosError, AxiosResponse } from "axios";
 import baseInstance from "./request";
 
 const ARTICLE_API_PATH = "/articles";
@@ -14,7 +15,7 @@ type AxiosPromise<T> = Promise<AxiosResponse<T>>;
 
 const DEFAULT_LIMIT = 10;
 const DEFAULT_OFFSET = 0;
-
+const DEFAULT_FEED = 20 as number;
 interface ArticleParams {
   tag: string;
   author: string;
@@ -51,6 +52,29 @@ export const getArticles = async ({
     const err = error as AxiosError;
 
     throw err.response;
+  }
+};
+
+export const getArticleFeed = async (
+  limit = DEFAULT_FEED,
+  offset = DEFAULT_OFFSET
+): AxiosPromise<ArticlesResponse> => {
+  try {
+    const response = await baseInstance.get<ArticlesResponse>(
+      `${ARTICLE_API_PATH}/feed`,
+      {
+        params: {
+          limit,
+          offset,
+        },
+      }
+    );
+
+    return response;
+  } catch (error) {
+    const err = error as AxiosError;
+
+    throw err;
   }
 };
 
@@ -170,6 +194,18 @@ export const putArticle = async (
     const response = await baseInstance.put(`${ARTICLE_API_PATH}/${slug}`, {
       article,
     });
+
+    return response;
+  } catch (error) {
+    const err = error as AxiosError;
+
+    throw err;
+  }
+};
+
+export const getTags = async (): AxiosPromise<Tags> => {
+  try {
+    const response = await baseInstance.get<Tags>("/tags");
 
     return response;
   } catch (error) {

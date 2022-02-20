@@ -33,6 +33,11 @@ const { isAuthenticated, userInfo } = useAuth();
 
 const navLinks = computed<NavLink[]>(() => [
   {
+    name: "Home",
+    path: "/",
+    auth: true,
+  },
+  {
     name: "New Article",
     path: "/editor",
     auth: true,

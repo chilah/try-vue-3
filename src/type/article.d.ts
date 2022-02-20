@@ -60,3 +60,7 @@ export interface ArticleForm {
   tag?: string;
   tagList: string[];
 }
+
+export interface Tags {
+  tags: string[];
+}

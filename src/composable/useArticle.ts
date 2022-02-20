@@ -8,9 +8,11 @@ import {
   deleteArticle,
   postArticle,
   putArticle,
+  getArticleFeed,
+  getTags,
 } from "@/services";
 import { Article, ArticleDetail, ArticleForm, Comment } from "@/type";
-import { Ref, ref, toRef, watch } from "vue";
+import { Ref, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 interface UseArticleReturn {
   articles: Ref<ArticleDetail[]>;
@@ -30,9 +32,12 @@ interface UseArticleReturn {
   submitDeleteArticle: (slug: string) => Promise<void>;
   submitPostArticle: (article: ArticleForm) => Promise<void>;
   submitPutArticle: (slug: string, article: ArticleForm) => Promise<void>;
+  getArticleFeedList: () => Promise<void>;
+  tags: Ref<string[]>;
+  fetchTags: () => Promise<void>;
 }
 
-type ArticleTabType = "my-articles" | "my-favorties";
+type ArticleTabType = "my-articles" | "my-favorties" | "global-feed";
 
 export const useArticle = (): UseArticleReturn => {
   const articles = ref<ArticleDetail[]>([]);
@@ -40,6 +45,7 @@ export const useArticle = (): UseArticleReturn => {
   const articleDetail = ref<ArticleDetail>();
 
   const comments = ref<Comment[]>([]);
+  const tags = ref<string[]>([]);
 
   const route = useRoute();
   const username = ref<string>("");
@@ -62,8 +68,9 @@ export const useArticle = (): UseArticleReturn => {
         response = data;
       }
 
-      if (index) {
+      if (typeof index === "number") {
         updateArticle(index, response.article);
+        console.log(index, response.article);
       } else {
         articleDetail.value = response.article;
       }
@@ -95,6 +102,12 @@ export const useArticle = (): UseArticleReturn => {
       const { data } = await getArticles({
         favorited: username.value,
       });
+
+      articles.value = data.articles;
+    }
+
+    if (articleTab.value === "global-feed") {
+      const { data } = await getArticleFeed();
 
       articles.value = data.articles;
     }
@@ -158,7 +171,27 @@ export const useArticle = (): UseArticleReturn => {
     }
   };
 
-  watch(articleTab, getArticlesType);
+  const getArticleFeedList = async () => {
+    try {
+      const { data } = await getArticleFeed();
+
+      articles.value = data.articles;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchTags = async () => {
+    try {
+      const { data } = await getTags();
+
+      tags.value = data.tags;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  watch(articleTab, getArticlesType, { immediate: true });
 
   watch(username, () => {
     toggleCurrentTab("my-articles");
@@ -191,5 +224,8 @@ export const useArticle = (): UseArticleReturn => {
     submitDeleteArticle,
     submitPostArticle,
     submitPutArticle,
+    getArticleFeedList,
+    tags,
+    fetchTags,
   };
 };
