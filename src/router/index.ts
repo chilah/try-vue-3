@@ -36,6 +36,21 @@ const routes: Array<RouteRecordRaw> = [
     name: "Profile",
     component: () => import("../views/Profile.vue"),
   },
+  {
+    path: "/article/:slug",
+    name: "Article",
+    component: () => import("../views/Article.vue"),
+  },
+  {
+    path: "/editor/:slug",
+    name: "Edit-Editor",
+    component: () => import("../views/Editor.vue"),
+  },
+  {
+    path: "/editor/",
+    name: "Create-Editor",
+    component: () => import("../views/Editor.vue"),
+  },
 ];
 
 const router = createRouter({

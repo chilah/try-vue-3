@@ -1,4 +1,10 @@
-import { Article, ArticleDetail, ArticlesResponse } from "@/type";
+import {
+  Article,
+  ArticleForm,
+  ArticlesResponse,
+  CommentResponse,
+  CommentsResponse,
+} from "@/type";
 import { AxiosError, AxiosResponse } from "axios";
 import baseInstance from "./request";
 
@@ -67,6 +73,103 @@ export const postUnfavorite = async (slug: string): AxiosPromise<Article> => {
     const response = await baseInstance.delete<Article>(
       `${ARTICLE_API_PATH}/${slug}/favorite`
     );
+
+    return response;
+  } catch (error) {
+    const err = error as AxiosError;
+
+    throw err;
+  }
+};
+
+export const getArticleDetail = async (slug: string): AxiosPromise<Article> => {
+  try {
+    const response = await baseInstance.get<Article>(
+      `${ARTICLE_API_PATH}/${slug}`
+    );
+
+    return response;
+  } catch (error) {
+    const err = error as AxiosError;
+
+    throw err;
+  }
+};
+
+export const getComments = async (
+  slug: string
+): AxiosPromise<CommentsResponse> => {
+  try {
+    const response = await baseInstance.get<CommentsResponse>(
+      `${ARTICLE_API_PATH}/${slug}/comments`
+    );
+
+    return response;
+  } catch (error) {
+    const err = error as AxiosError;
+
+    throw err;
+  }
+};
+
+export const postComment = async (
+  slug: string,
+  comment: string
+): AxiosPromise<CommentResponse> => {
+  try {
+    const response = await baseInstance.post<CommentResponse>(
+      `${ARTICLE_API_PATH}/${slug}/comments`,
+      {
+        comment: {
+          body: comment,
+        },
+      }
+    );
+
+    return response;
+  } catch (error) {
+    const err = error as AxiosError;
+
+    throw err;
+  }
+};
+
+export const deleteArticle = async (slug: string) => {
+  try {
+    const response = await baseInstance.delete(`${ARTICLE_API_PATH}/${slug}`);
+
+    return response;
+  } catch (error) {
+    const err = error as AxiosError;
+
+    throw err;
+  }
+};
+
+export const postArticle = async (
+  article: ArticleForm
+): AxiosPromise<Article> => {
+  try {
+    const response = await baseInstance.post<Article>(ARTICLE_API_PATH, {
+      article,
+    });
+
+    return response;
+  } catch (error) {
+    const err = error as AxiosError;
+
+    throw err;
+  }
+};
+
+export const putArticle = async (
+  slug: string,
+  article: ArticleForm
+): AxiosPromise<Article> => {
+  try {
+    const response = await baseInstance.put(`${ARTICLE_API_PATH}/${slug}`, {
+      article,
+    });
 
     return response;
   } catch (error) {

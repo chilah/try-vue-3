@@ -3,7 +3,7 @@
     <div class="container">
       <a class="navbar-brand">conduit</a>
       <ul class="nav navbar-nav pull-xs-right">
-        <li v-for="nav in navLinks" class="nav-item" :key="nav.name">
+        <li v-for="nav in navLinks" :key="nav.name" class="nav-item">
           <template v-if="nav.auth === isAuthenticated">
             <router-link :to="nav.path">
               <a class="nav-link active" href="">{{ nav.name }}</a>
