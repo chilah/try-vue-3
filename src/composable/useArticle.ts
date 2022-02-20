@@ -6,8 +6,10 @@ import {
   getComments,
   postComment,
   deleteArticle,
+  postArticle,
+  putArticle,
 } from "@/services";
-import { Article, ArticleDetail, Comment } from "@/type";
+import { Article, ArticleDetail, ArticleForm, Comment } from "@/type";
 import { Ref, ref, toRef, watch } from "vue";
 import { useRoute } from "vue-router";
 interface UseArticleReturn {
@@ -26,6 +28,8 @@ interface UseArticleReturn {
   getCommentsBySlug: (slug: string) => Promise<void>;
   submitComment: (slug: string, comment: string) => Promise<void>;
   submitDeleteArticle: (slug: string) => Promise<void>;
+  submitPostArticle: (article: ArticleForm) => Promise<void>;
+  submitPutArticle: (slug: string, article: ArticleForm) => Promise<void>;
 }
 
 type ArticleTabType = "my-articles" | "my-favorties";
@@ -134,6 +138,26 @@ export const useArticle = (): UseArticleReturn => {
     }
   };
 
+  const submitPostArticle = async (article: ArticleForm) => {
+    try {
+      const { data } = await postArticle(article);
+
+      articleDetail.value = data.article;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const submitPutArticle = async (slug: string, article: ArticleForm) => {
+    try {
+      const { data } = await putArticle(slug, article);
+
+      articleDetail.value = data.article;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   watch(articleTab, getArticlesType);
 
   watch(username, () => {
@@ -165,5 +189,7 @@ export const useArticle = (): UseArticleReturn => {
     getCommentsBySlug,
     submitComment,
     submitDeleteArticle,
+    submitPostArticle,
+    submitPutArticle,
   };
 };

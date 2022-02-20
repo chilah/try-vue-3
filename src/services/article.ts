@@ -1,7 +1,7 @@
 import {
   Article,
+  ArticleForm,
   ArticlesResponse,
-  Comment,
   CommentResponse,
   CommentsResponse,
 } from "@/type";
@@ -137,6 +137,39 @@ export const postComment = async (
 export const deleteArticle = async (slug: string) => {
   try {
     const response = await baseInstance.delete(`${ARTICLE_API_PATH}/${slug}`);
+
+    return response;
+  } catch (error) {
+    const err = error as AxiosError;
+
+    throw err;
+  }
+};
+
+export const postArticle = async (
+  article: ArticleForm
+): AxiosPromise<Article> => {
+  try {
+    const response = await baseInstance.post<Article>(ARTICLE_API_PATH, {
+      article,
+    });
+
+    return response;
+  } catch (error) {
+    const err = error as AxiosError;
+
+    throw err;
+  }
+};
+
+export const putArticle = async (
+  slug: string,
+  article: ArticleForm
+): AxiosPromise<Article> => {
+  try {
+    const response = await baseInstance.put(`${ARTICLE_API_PATH}/${slug}`, {
+      article,
+    });
 
     return response;
   } catch (error) {

@@ -52,3 +52,11 @@ export interface CommentsResponse {
 export interface CommentResponse {
   comment: Comment;
 }
+
+export interface ArticleForm {
+  title: string;
+  description: string;
+  body: string;
+  tag?: string;
+  tagList: string[];
+}

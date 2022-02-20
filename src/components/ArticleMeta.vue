@@ -31,11 +31,13 @@ const date = computed(() => {
 </script>
 <template>
   <div class="article-meta">
-    <a href=""><img :src="article?.author.image" /></a>
-    <div class="info">
-      <a href="" class="author">{{ article?.author.username }}</a>
-      <span class="date">{{ date }} </span>
-    </div>
+    <router-link :to="`/profile/${article?.author.username}`">
+      <a href=""><img :src="article?.author.image" /></a>
+      <div class="info">
+        <a class="author">{{ article?.author.username }}</a>
+        <span class="date">{{ date }} </span>
+      </div>
+    </router-link>
 
     <button
       v-if="!isCurrentUser"
@@ -49,7 +51,20 @@ const date = computed(() => {
         `(${article?.author.followedBy?.length})`
       }}</span>
     </button>
-    &nbsp;&nbsp;
+    &nbsp;
+
+    <template v-if="isCurrentUser">
+      <router-link :to="`/editor/${article?.slug}`">
+        <button
+          aria-label="Edit article"
+          class="btn btn-outline-secondary btn-sm space"
+          name="edit-article"
+        >
+          <i class="ion-edit space" /> Edit Article
+        </button>
+      </router-link>
+    </template>
+    &nbsp;
 
     <button class="btn btn-sm btn-outline-primary" @click="emits('update')">
       <i class="ion-heart"></i>
