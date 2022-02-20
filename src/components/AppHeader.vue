@@ -1,7 +1,10 @@
 <template>
   <nav class="navbar navbar-light">
     <div class="container">
-      <a class="navbar-brand">conduit</a>
+      <router-link to="/">
+        <a class="navbar-brand">conduit</a>
+      </router-link>
+
       <ul class="nav navbar-nav pull-xs-right">
         <li v-for="nav in navLinks" :key="nav.name" class="nav-item">
           <template v-if="nav.auth === isAuthenticated">
@@ -29,11 +32,6 @@ interface NavLink {
 const { isAuthenticated, userInfo } = useAuth();
 
 const navLinks = computed<NavLink[]>(() => [
-  {
-    name: "Home",
-    path: "/home",
-    auth: false,
-  },
   {
     name: "New Article",
     path: "/editor",

@@ -11,7 +11,7 @@ const initState: Partial<AuthResponse<UserData | null>> = {
 const state = reactive(initState);
 
 export const useAuth = () => {
-  const updateUser = (data: UserData) => {
+  const updateUser = (data: UserData | null) => {
     userStorage.setStorage(data);
     state.user = data;
   };
