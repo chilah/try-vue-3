@@ -52,6 +52,11 @@
               </button>
             </fieldset>
           </form>
+          <hr />
+
+          <button class="btn btn-outline-danger" @click="onLogout">
+            Or click here to logout.
+          </button>
         </div>
       </div>
     </div>
@@ -60,9 +65,10 @@
 
 <script setup lang="ts">
 import { useAuth } from "@/composable";
+import router from "@/router";
 import { updateSetting } from "@/services";
 import { SettingsForm } from "@/type";
-import { reactive } from "vue";
+import { onMounted, reactive } from "vue";
 
 const { userInfo, updateUser } = useAuth();
 
@@ -81,4 +87,16 @@ const update = async () => {
 
   updateUser(user);
 };
+
+const onLogout = () => {
+  updateUser(null);
+
+  router.push("/");
+};
+
+onMounted(() => {
+  if (!userInfo.value) {
+    router.push("/login");
+  }
+});
 </script>
