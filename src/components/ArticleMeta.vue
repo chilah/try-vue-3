@@ -74,6 +74,7 @@ const date = computed(() => {
     &nbsp;
 
     <button
+      v-if="isCurrentUser"
       aria-label="Delete article"
       class="btn btn-outline-danger btn-sm"
       @click="emits('delete')"
